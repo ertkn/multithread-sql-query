@@ -94,14 +94,6 @@ namespace TwoCustomerThread
             return condition;
         }
 
-        public static Boolean IsAssigned()
-        {
-            if (ThreadA.isoLevel == null)
-                return false;
-            else
-                return true;
-        }
-
         public void AddColumn(SqlDataReader reader)
         {
             sqlGrid.ColumnCount = reader.FieldCount;
@@ -222,11 +214,19 @@ namespace TwoCustomerThread
             return cntLine;
         }
 
+        public static Boolean IsAssigned()
+        {
+            if (ThreadA.isoLevel == null)
+                return false;
+            else
+                return true;
+        }
+
         public void FillTable()
         {
             if (IsAssigned() && ThreadA.isFinished && ThreadB.isFinished)
             {
-
+                lblFillWarning.Hide();
                 try
                 {
                     reportTable.RowCount = 1;
@@ -238,7 +238,6 @@ namespace TwoCustomerThread
                     reportTable.Rows[0].Cells[5].Value = TwoCustomerThread.ThreadB.deadLock;
                     reportTable.Rows[0].Cells[6].Value = TwoCustomerThread.ThreadA.isoLevel;
 
-                    lblFillWarning.Hide();
                 }
                 catch
                 {
@@ -250,8 +249,12 @@ namespace TwoCustomerThread
                     MessageBox.Show("Wait until the thread queries end!\nException Type is :" + e);*/
                 }
             }
-            lblFillWarning.Text = "Threads are working. Please wait...";
-            lblFillWarning.Show();
+            else
+            {
+                lblFillWarning.Text = "Threads are working. Please wait...";
+                lblFillWarning.Show();
+            }
+                
         }
 
         public void SaveTableData()
@@ -260,7 +263,8 @@ namespace TwoCustomerThread
             {
                 try
                 {
-                    string path = @"C:\Users\ozclk\source\repos\TwoCustomerThread\TextFile1.txt";
+                    string path = @"C:\Users\ozclk\Documents\GitHub\multithread-sql-query\TwoCustomerThread\TextFile1.txt";
+                    
                     if (!File.Exists(path))
                     {
                         using (StreamWriter sw = File.CreateText(path))
@@ -345,7 +349,7 @@ namespace TwoCustomerThread
         private void btnLoad_Click(object sender, EventArgs e)
         {
             reportTable.Rows.Clear();
-            string path = @"C:\Users\ozclk\source\repos\TwoCustomerThread\TextFile1.txt";
+            string path = @"C:\Users\ozclk\Documents\GitHub\multithread-sql-query\TwoCustomerThread\TextFile1.txt";
             LoadTableData(path, reportTable);
             //LoadTableData();
         }

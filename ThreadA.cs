@@ -14,10 +14,13 @@ namespace TwoCustomerThread
         private DateTime _bgnTime;
         private DateTime _endTime;
         private TimeSpan _elapseTime;
+        private int _cntDead = 0;
+
         static private TimeSpan _totTime;
         static private int _deadLock;
         static private string _isoLevel;
         static private bool _isfinished = false;
+        Random rand = new Random();
 
         public ThreadA(int thrNum)
         {
@@ -25,95 +28,145 @@ namespace TwoCustomerThread
             this._thread.Name = "Thread" + thrNum;
         }
 
-        public Thread thread
-        {
-            get { return _thread; }
-            set { _thread = value; }
-        }
+        public Thread thread{get { return _thread; } set { _thread = value; }}
         
-        public DateTime bgnTime
-        {
-            get { return _bgnTime; } 
-            set { _bgnTime = value; }
-        }
+        public DateTime bgnTime{get { return _bgnTime; } set { _bgnTime = value; }}
 
-        public DateTime endTime
-        {
-            get { return _endTime; }
-            set { _endTime = value; }
-        }
+        public DateTime endTime{get { return _endTime; } set { _endTime = value; }}
 
-        public TimeSpan elapseTime
-        {
-            get { return _elapseTime; }
-            set { _elapseTime = value; }
-        }
+        public TimeSpan elapseTime{get { return _elapseTime; } set { _elapseTime = value; }}
 
-        public static TimeSpan totTime
-        {
-            get { return _totTime; }
-            set { _totTime = value; }
-        }
+        public int cntDead { get { return _cntDead; } set { _cntDead = value; } }
 
-        public static int deadLock 
-        {
-            get { return _deadLock; }
-            set { _deadLock = value; }
-        }
+        public static TimeSpan totTime{get { return _totTime; } set { _totTime = value; }}
 
-        public static string isoLevel
-        {
-            get { return _isoLevel; }
-            set { _isoLevel = value; }
-        }
+        public static int deadLock {get { return _deadLock; } set { _deadLock = value; }}
 
-        public static bool isFinished
+        public static string isoLevel {get { return _isoLevel; } set { _isoLevel = value; }}
+
+        public static bool isFinished {get { return _isfinished; } set { _isfinished = value; }}
+
+        public void SqlUpdateQuery(int fromDate, int toDate,SqlCommand command, SqlTransaction sqlTran)
         {
-            get { return _isfinished; }
-            set { _isfinished = value; }
+            try
+            {
+                if (this.rand.NextDouble() < 0.5)
+                {
+                    //cntExe++;
+                    command.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
+                        "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '" + fromDate + "' AND '" + toDate + "' " +
+                        "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
+                    command.ExecuteNonQuery();
+                    //MessageBox.Show("sorgu gerçekleşti.");
+                }
+            }
+            catch (SqlException e)
+            {
+                if(e.Number == 1205)
+                {
+                    try
+                    {
+                        cntDead++;
+                        MessageBox.Show("Inner Try");
+                        sqlTran.Rollback();
+                    }
+                    catch (SqlException ex)
+                    {
+                        /*if (sqlTran.Connection != null)
+                        {
+                            MessageBox.Show("THREAD-A: An exception of type " + ex.GetType() +
+                                " was encountered while attempting to roll back the transaction.");
+                        }*/
+                        throw new Exception(ex.Message);
+                    }
+                }
+            }
         }
 
         public void ThrQuery()
         {
-            int cntDead = 0, cntExe = 0, cntExc = 0;
-
-            SqlConnection sqlConn;
+            string connString = "Data Source= DESKTOP-704N33C;Initial Catalog=AdventureWorks2012;Integrated Security=True;Connection Timeout=30;";
+            /*SqlConnection sqlConn;
             SqlTransaction sqlTran;
             SqlCommand sqlCommand;
-
-            var rand = new Random();
+            */
             this.bgnTime = DateTime.Now;
             //MessageBox.Show(beginTime.ToString("T"));
+
             for (int count = 0; count < 100; count++)
             {
                 isFinished = false;
-                sqlConn = new SqlConnection(@"Data Source= DESKTOP-704N33C;Initial Catalog=AdventureWorks2012;Integrated Security=True;");
-                sqlConn.Open();
-/*
-                if ((count + 1) == 100)
+               
+                using(SqlConnection sqlConn = new SqlConnection(connString))
                 {
-                    MessageBox.Show((count + 1) + ". A-" + thread.Name + " bağlantısı açıldı...");
-                }*/
-                sqlCommand = sqlConn.CreateCommand();
-                sqlTran = sqlConn.BeginTransaction(IsolationLevel.ReadUncommitted);
-                
-                isoLevel = (Convert.ToString(sqlTran.IsolationLevel));
-
-                sqlCommand.Connection = sqlConn;
-                sqlCommand.Transaction = sqlTran;
-
-                try
-                {
-                    if (rand.NextDouble() < 0.5)
+                    sqlConn.Open();
+                    using(SqlCommand sqlCommand = sqlConn.CreateCommand())
                     {
-                        cntExe++;
-                        sqlCommand.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
-                            "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '20110101' AND '20111231' " +
-                            "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                        sqlCommand.ExecuteNonQuery();
-                        //MessageBox.Show("sorgu gerçekleşti.");
+
+                        SqlTransaction sqlTran = sqlConn.BeginTransaction(IsolationLevel.Serializable);
+
+                        isoLevel = (Convert.ToString(sqlTran.IsolationLevel));
+
+                        sqlCommand.Connection = sqlConn;
+                        sqlCommand.Transaction = sqlTran;
+
+                        try
+                        {
+
+                            SqlUpdateQuery(20110101, 20111231, sqlCommand, sqlTran);
+                            SqlUpdateQuery(20120101, 20121231, sqlCommand, sqlTran);
+                            SqlUpdateQuery(20130101, 20131231, sqlCommand, sqlTran);
+                            SqlUpdateQuery(20140101, 20141231, sqlCommand, sqlTran);
+                            SqlUpdateQuery(20150101, 20151231, sqlCommand, sqlTran);
+
+                            sqlTran.Commit();
+                        }
+                        catch (SqlException e)
+                        {
+                            if (e.Number == 1205)
+                            {
+                                MessageBox.Show("Outter Try");
+                                cntDead++;
+                                try
+                                {
+                                    sqlTran.Rollback();
+                                }
+                                catch (SqlException ex)
+                                {
+                                    throw new Exception(ex.Message);
+                                }
+                            }
+                            else
+                                throw new Exception(e.Message);
+
+                        }
+                        finally
+                        {
+                            //sqlCommand.Connection.Close();
+                            //sqlTran.Dispose();
+                            sqlCommand.Dispose();
+                            sqlConn.Close();
+                            sqlConn.Dispose();
+                        }
                     }
-                    if (rand.NextDouble() < 0.5)
+                }
+            }
+
+            endTime = DateTime.Now;
+
+            /*MessageBox.Show(endTime.ToString("T"));
+            MessageBox.Show(elapsed.ToString("T"));*/
+            
+            elapseTime = endTime.Subtract(bgnTime); // Record this value for reporting.
+            
+            totTime += elapseTime;
+            deadLock += cntDead;
+            isFinished = true;
+        }
+    }
+}
+
+/*if (rand.NextDouble() < 0.5)
                     {
                         cntExe++;
                         sqlCommand.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
@@ -148,57 +201,21 @@ namespace TwoCustomerThread
                             "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
                         sqlCommand.ExecuteNonQuery();
                         //MessageBox.Show("sorgu gerçekleşti.");
-                    }
+                    }*/
 
-                    sqlTran.Commit();
-
-                    //MessageBox.Show("Bağlantı kapatıldı.");
-                    //Console.WriteLine("Both records are written to database.");
-                }
-
-                catch (SqlException e)
-                {
-                    try
-                    {
-                        sqlTran.Rollback();
-                        if(e.Number ==1205  )
-                        {
-                            cntDead++;
-                        } 
-                    }
-                    catch (SqlException ex)
-                    {
-                        if (sqlTran.Connection != null)
-                        {
-                            MessageBox.Show("THREAD-A: An exception of type " + ex.GetType() +
-                                " was encountered while attempting to roll back the transaction.");
-                        }
-                    }
-                    cntExc++;
-                    /*                    MessageBox.Show("THREAD-A: An exception of type " + e.GetType() +
-                                            " was encountered while inserting the data.\nNeither record was written to database.");*/
-                    //MessageBox.Show("Neither record was written to database.");
-                }
-
-
-                finally
-                {
-                    sqlConn.Close();
-                }
-            }
-
-            endTime = DateTime.Now;
-            //MessageBox.Show(endTime.ToString("T"));
-            //MessageBox.Show(elapsed.ToString("T"));
-            elapseTime = endTime.Subtract(bgnTime); // Record this value for reporting.
-            
-            totTime += elapseTime;
-            deadLock += cntDead;
-            isFinished = true;
+/*
+if ((count + 1) == 100)
+{
+MessageBox.Show((count + 1) + ". A-" + thread.Name + " bağlantısı açıldı...");
+}*/
 
 /*            MessageBox.Show("A-" + thread.Name + " START: " + bgnTime.ToString("T") + "\nA-"+ thread.Name + " END: " + endTime.ToString("T") + "\nA-" + thread.Name + " TIME ELAPSE: " + elapseTime.ToString("T") +
                 "\nTransaction " + cntExe + " times executed" + "\nTransaction " + cntExc + " times get exception" + "\nTransaction has " + cntDead + " times DeadLock");*/
-            //thread.Abort();
-        }
-    }
-}
+//thread.Abort();
+
+//MessageBox.Show("Bağlantı kapatıldı.");
+//Console.WriteLine("Both records are written to database.");
+
+/*                    MessageBox.Show("THREAD-A: An exception of type " + e.GetType() +
+                        " was encountered while inserting the data.\nNeither record was written to database.");
+//MessageBox.Show("Neither record was written to database.");*/
