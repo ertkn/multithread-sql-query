@@ -76,7 +76,7 @@ namespace TwoCustomerThread
             for (int count = 0; count < 100; count++)
             {
                 isFinished = false;
-                SqlConnection sqlConn = new SqlConnection(@"Data Source= ;Initial Catalog=AdventureWorks2012;Integrated Security=True;");
+                SqlConnection sqlConn = new SqlConnection(@"Data Source= DESKTOP-704N33C;Initial Catalog=AdventureWorks2012;Integrated Security=True;");
                 sqlConn.Open();
                 SqlCommand sqlCommand = sqlConn.CreateCommand();
                 /*
@@ -190,31 +190,9 @@ namespace TwoCustomerThread
             deadLock += cntDead;
             isFinished = true; 
 
-            MessageBox.Show("B-" + thread.Name + " START: " + bgnTime.ToString("T") + "\nB-" + thread.Name + " END: " + endTime.ToString("T") + "\nB-" + thread.Name + " TIME ELAPSE: " + elapseTime.ToString("T") +
-                "\nTransaction " + cntExe + " times executed" + "\nTransaction " + cntExc + " times get exception" + "\nTransaction has " + cntDead + " times deadlock");
+/*            MessageBox.Show("B-" + thread.Name + " START: " + bgnTime.ToString("T") + "\nB-" + thread.Name + " END: " + endTime.ToString("T") + "\nB-" + thread.Name + " TIME ELAPSE: " + elapseTime.ToString("T") +
+                "\nTransaction " + cntExe + " times executed" + "\nTransaction " + cntExc + " times get exception" + "\nTransaction has " + cntDead + " times deadlock");*/
             //thread.Abort();
         }
     }
 }
-
-
-/*                catch (Exception e)
-                {
-                    try
-                    {
-                        sqlTran.Rollback();
-                    }
-                    catch (SqlException ex)
-                    {
-                        if (sqlTran.Connection != null)
-                        {
-                            MessageBox.Show("THREAD-B: An exception of type " + ex.GetType() +
-                                " was encountered while attempting to roll back the transaction.");
-                        }
-                    }
-                    cntExc++;
-                    MessageBox.Show(thread.Name + " : An exception of type " + e.GetType() +
-                        " was encountered while inserting the data.\nNeither record was written to database." +
-                        "\nTransaction " + cntTran + " Times Executed" + "\nTransaction " + "\nTransaction " + (cntExc) + " times get exception");
-                    //Console.WriteLine("Neither record was written to database.");
-                }*/

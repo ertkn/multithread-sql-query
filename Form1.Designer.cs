@@ -37,13 +37,6 @@ namespace TwoCustomerThread
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.lblWarning = new System.Windows.Forms.Label();
             this.reportTable = new System.Windows.Forms.DataGridView();
-            this.ClmnNumA = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ClmnNumB = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ClmnAvgTimeA = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ClmnDLockA = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ClmnAvgTimeB = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ClmnDLockB = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ClmIsoType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.grpBox = new System.Windows.Forms.GroupBox();
             this.sqlGrid = new System.Windows.Forms.DataGridView();
             this.btnSelect = new System.Windows.Forms.Button();
@@ -52,6 +45,13 @@ namespace TwoCustomerThread
             this.lblFillWarning = new System.Windows.Forms.Label();
             this.btnLoad = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
+            this.ClmnNumA = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ClmnNumB = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ClmnAvgTimeA = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ClmnDLockA = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ClmnAvgTimeB = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ClmnDLockB = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ClmIsoType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.reportTable)).BeginInit();
             this.grpBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.sqlGrid)).BeginInit();
@@ -148,54 +148,6 @@ namespace TwoCustomerThread
             this.reportTable.Size = new System.Drawing.Size(847, 225);
             this.reportTable.TabIndex = 6;
             // 
-            // ClmnNumA
-            // 
-            this.ClmnNumA.HeaderText = "Number of Type A Users";
-            this.ClmnNumA.Name = "ClmnNumA";
-            this.ClmnNumA.ReadOnly = true;
-            this.ClmnNumA.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // ClmnNumB
-            // 
-            this.ClmnNumB.HeaderText = "Number of Type B Users";
-            this.ClmnNumB.Name = "ClmnNumB";
-            this.ClmnNumB.ReadOnly = true;
-            this.ClmnNumB.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // ClmnAvgTimeA
-            // 
-            this.ClmnAvgTimeA.HeaderText = "Average Time of Type A Threads";
-            this.ClmnAvgTimeA.Name = "ClmnAvgTimeA";
-            this.ClmnAvgTimeA.ReadOnly = true;
-            this.ClmnAvgTimeA.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // ClmnDLockA
-            // 
-            this.ClmnDLockA.HeaderText = "Number of Deadlocks Encounterd by Type A Users";
-            this.ClmnDLockA.Name = "ClmnDLockA";
-            this.ClmnDLockA.ReadOnly = true;
-            this.ClmnDLockA.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // ClmnAvgTimeB
-            // 
-            this.ClmnAvgTimeB.HeaderText = "Average Time of Type B Threads";
-            this.ClmnAvgTimeB.Name = "ClmnAvgTimeB";
-            this.ClmnAvgTimeB.ReadOnly = true;
-            this.ClmnAvgTimeB.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // ClmnDLockB
-            // 
-            this.ClmnDLockB.HeaderText = "Number of Deadlocks Encounterd by Type B Users";
-            this.ClmnDLockB.Name = "ClmnDLockB";
-            this.ClmnDLockB.ReadOnly = true;
-            this.ClmnDLockB.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // ClmIsoType
-            // 
-            this.ClmIsoType.HeaderText = "Isolation Type";
-            this.ClmIsoType.Name = "ClmIsoType";
-            this.ClmIsoType.ReadOnly = true;
-            // 
             // grpBox
             // 
             this.grpBox.Controls.Add(this.lblTypeA);
@@ -272,9 +224,9 @@ namespace TwoCustomerThread
             this.lblFillWarning.ForeColor = System.Drawing.Color.Crimson;
             this.lblFillWarning.Location = new System.Drawing.Point(130, 276);
             this.lblFillWarning.Name = "lblFillWarning";
-            this.lblFillWarning.Size = new System.Drawing.Size(145, 22);
+            this.lblFillWarning.Size = new System.Drawing.Size(225, 22);
             this.lblFillWarning.TabIndex = 6;
-            this.lblFillWarning.Text = "Threads are not finished!";
+            this.lblFillWarning.Text = "Threads are not finished! Please wait...";
             this.lblFillWarning.Visible = false;
             // 
             // btnLoad
@@ -299,6 +251,56 @@ namespace TwoCustomerThread
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // ClmnNumA
+            // 
+            this.ClmnNumA.HeaderText = "Number of Type A Users";
+            this.ClmnNumA.Name = "ClmnNumA";
+            this.ClmnNumA.ReadOnly = true;
+            this.ClmnNumA.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ClmnNumA.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // ClmnNumB
+            // 
+            this.ClmnNumB.HeaderText = "Number of Type B Users";
+            this.ClmnNumB.Name = "ClmnNumB";
+            this.ClmnNumB.ReadOnly = true;
+            this.ClmnNumB.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ClmnNumB.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // ClmnAvgTimeA
+            // 
+            this.ClmnAvgTimeA.HeaderText = "Average Time of Type A Threads";
+            this.ClmnAvgTimeA.Name = "ClmnAvgTimeA";
+            this.ClmnAvgTimeA.ReadOnly = true;
+            this.ClmnAvgTimeA.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // ClmnDLockA
+            // 
+            this.ClmnDLockA.HeaderText = "Number of Deadlocks Encounterd by Type A Users";
+            this.ClmnDLockA.Name = "ClmnDLockA";
+            this.ClmnDLockA.ReadOnly = true;
+            this.ClmnDLockA.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // ClmnAvgTimeB
+            // 
+            this.ClmnAvgTimeB.HeaderText = "Average Time of Type B Threads";
+            this.ClmnAvgTimeB.Name = "ClmnAvgTimeB";
+            this.ClmnAvgTimeB.ReadOnly = true;
+            this.ClmnAvgTimeB.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // ClmnDLockB
+            // 
+            this.ClmnDLockB.HeaderText = "Number of Deadlocks Encounterd by Type B Users";
+            this.ClmnDLockB.Name = "ClmnDLockB";
+            this.ClmnDLockB.ReadOnly = true;
+            this.ClmnDLockB.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // ClmIsoType
+            // 
+            this.ClmIsoType.HeaderText = "Isolation Type";
+            this.ClmIsoType.Name = "ClmIsoType";
+            this.ClmIsoType.ReadOnly = true;
             // 
             // ThreadForm
             // 

@@ -87,7 +87,7 @@ namespace TwoCustomerThread
             for (int count = 0; count < 100; count++)
             {
                 isFinished = false;
-                sqlConn = new SqlConnection(@"Data Source= ;Initial Catalog=AdventureWorks2012;Integrated Security=True;");
+                sqlConn = new SqlConnection(@"Data Source= DESKTOP-704N33C;Initial Catalog=AdventureWorks2012;Integrated Security=True;");
                 sqlConn.Open();
 /*
                 if ((count + 1) == 100)
@@ -196,38 +196,9 @@ namespace TwoCustomerThread
             deadLock += cntDead;
             isFinished = true;
 
-            MessageBox.Show("A-" + thread.Name + " START: " + bgnTime.ToString("T") + "\nA-"+ thread.Name + " END: " + endTime.ToString("T") + "\nA-" + thread.Name + " TIME ELAPSE: " + elapseTime.ToString("T") +
-                "\nTransaction " + cntExe + " times executed" + "\nTransaction " + cntExc + " times get exception" + "\nTransaction has " + cntDead + " times DeadLock");
+/*            MessageBox.Show("A-" + thread.Name + " START: " + bgnTime.ToString("T") + "\nA-"+ thread.Name + " END: " + endTime.ToString("T") + "\nA-" + thread.Name + " TIME ELAPSE: " + elapseTime.ToString("T") +
+                "\nTransaction " + cntExe + " times executed" + "\nTransaction " + cntExc + " times get exception" + "\nTransaction has " + cntDead + " times DeadLock");*/
             //thread.Abort();
         }
     }
 }
-
-/*"UPDATE Sales.SalesOrderDetail SET Address = @add, City = @cit Where FirstName = @fn and LastName = @add";
-                        command.ExecuteNonQuery();
-                        command.CommandText =
-                            "Insert into Region (RegionID, RegionDescription) VALUES (101, 'Description')";
-                        command.ExecuteNonQuery();
-                        transaction.Commit();
-
-
-                  catch (Exception e)
-                {
-                    try
-                    {
-                        sqlTran.Rollback();
-                    }
-                    catch (SqlException ex)
-                    {
-                        if (sqlTran.Connection != null)
-                        {
-                            MessageBox.Show("THREAD-A: An exception of type " + ex.GetType() +
-                                " was encountered while attempting to roll back the transaction.");
-                        }
-                    }
-                    cntExc++;
-                    
-                    MessageBox.Show("THREAD-A: An exception of type " + e.GetType() +
-                                            " was encountered while inserting the data.\nNeither record was written to database.");
-                    //MessageBox.Show("Neither record was written to database.");
-                }*/

@@ -49,12 +49,6 @@ namespace TwoCustomerThread
         {
             for(int count = 0; count < threadNum; count++)
             {
-                /*int thName = count;
-                Thread thread = new Thread(new ThreadStart(ThreadA));
-                thread.Name = "thread" + thName;
-                thread.Start();
-                MessageBox.Show(Convert.ToString(threadNum));*/
-
                 ThreadA threadA = new ThreadA((count + 1));
                 threadA.thread.Start();
             }
@@ -63,11 +57,6 @@ namespace TwoCustomerThread
         {
             for (int count = 0; count < threadNum; count++)
             {
-                /*int thName = count;
-                Thread thread = new Thread(new ThreadStart(ThreadB));
-                thread.Name = "thread" + thName;
-                thread.Start();*/
-
                 ThreadB threadB = new ThreadB((count + 1));
                 threadB.thread.Start();
             }
@@ -113,36 +102,8 @@ namespace TwoCustomerThread
                 return true;
         }
 
-/*        public static Boolean IsFinished()
-        {
-            MessageBox.Show(Convert.ToString(ThreadA.isFinished ? true : false));
-            do
-            {
-                return ThreadA.isFinished ? true : false;
-            } while (!ThreadA.isFinished);
-            MessageBox.Show(Convert.ToString(ThreadB.isFinished ? true : false));
-            do
-            {
-                MessageBox.Show(Convert.ToString(ThreadB.isFinished ? true : false));
-                return ThreadB.isFinished ? true : false;
-            } while (!ThreadB.isFinished);
-        }*/
-
         public void AddColumn(SqlDataReader reader)
         {
-            //SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-
-            //sqlGrid.ColumnCount = reader.FieldCount;
-            //MessageBox.Show("Column Count: " + Convert.ToString(reader.FieldCount));
-
-            /*            String Output = "";
-                        while (reader.Read())
-                        {
-                            Output = Output + reader.GetValue(0) + " - " + reader.GetValue(1)
-                                + " - " + reader.GetValue(2) + " - " + reader.GetValue(3) + " - " + reader.GetValue(4) + "\n";
-                        }
-                        MessageBox.Show(Output);*/
-
             sqlGrid.ColumnCount = reader.FieldCount;
             for (int cntClmn = 0; cntClmn < reader.FieldCount; cntClmn++)
             {
@@ -211,36 +172,12 @@ namespace TwoCustomerThread
         {
             SqlConnection sqlConnenction = new SqlConnection(@"Data Source=DESKTOP-704N33C;Initial Catalog=AdventureWorks2012;Integrated Security=True;");
             sqlConnenction.Open();
-           /* SqlCommand sqlCommand = new SqlCommand("SELECT * FROM Sales.SalesOrderDetail WHERE UnitPrice > 100 " +
-                                    "AND EXISTS(SELECT* FROM Sales.SalesOrderHeader" +
-                                                "WHERE Sales.SalesOrderHeader.SalesOrderID =" +
-                                                    "Sales.SalesOrderDetail.SalesOrderID" +
-                                                "AND Sales.SalesOrderHeader.OrderDate" +
-                                                    "BETWEEN ‘20150101’ AND ‘20151231’" +
-                                                "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)", sqlConnenction);*/
 
             SqlCommand sqlCommand = new SqlCommand("SELECT TOP 10 * FROM Sales.SalesOrderDetail WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
                 "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '20140101' AND '20151231' " +
                 "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)", sqlConnenction);
             SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
             
-            /*            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-                        DataTable dt = new DataTable();
-                        dt.Load(sqlDataReader);
-                        int numRows = dt.Rows.Count;
-                        MessageBox.Show("Number of Rows: " + numRows);*/
-/*
-            "UPDATE Sales.SalesOrderDetail" +
-                                    "SET UnitPrice = UnitPrice * 10.0 / 10.0" +
-                                "WHERE UnitPrice > 100 " +
-                                    "AND EXISTS(SELECT* FROM Sales.SalesOrderHeader" +
-                                                "WHERE Sales.SalesOrderHeader.SalesOrderID =" +
-                                                    "Sales.SalesOrderDetail.SalesOrderID" +
-                                                "AND Sales.SalesOrderHeader.OrderDate" +
-                                                    "BETWEEN @BeginDate = ‘20150101’ AND @EndDate = ‘20151231’" +
-                                                "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)"*/
-
-
             try
             {
 
@@ -250,14 +187,6 @@ namespace TwoCustomerThread
                 //sqlDataReader = sqlCommand.ExecuteReader();
                 AddColumn(ReaderAssign(sqlDataReader,sqlCommand));
                 AddRow(ReaderAssign(sqlDataReader, sqlCommand));
-
-                /*                String Output = "";
-                                while (sqlDataReader.Read())
-                                {
-                                    Output = Output + sqlDataReader.GetValue(0) + " - " + sqlDataReader.GetValue(1)
-                                        + " - " + sqlDataReader.GetValue(2) + " - " + sqlDataReader.GetValue(3) + "\n";
-                                }
-                                MessageBox.Show(Output);*/
 
                 // Call Close when done reading.
 
@@ -295,7 +224,7 @@ namespace TwoCustomerThread
 
         public void FillTable()
         {
-            if (IsAssigned())
+            if (IsAssigned() && ThreadA.isFinished && ThreadB.isFinished)
             {
 
                 try
@@ -321,6 +250,8 @@ namespace TwoCustomerThread
                     MessageBox.Show("Wait until the thread queries end!\nException Type is :" + e);*/
                 }
             }
+            lblFillWarning.Text = "Threads are working. Please wait...";
+            lblFillWarning.Show();
         }
 
         public void SaveTableData()
@@ -357,7 +288,7 @@ namespace TwoCustomerThread
                                                  Convert.ToString(ThreadA.isoLevel);
                         sw.WriteLine(saveString);
                         btnSave.Enabled = false;
-                        lblFillWarning.Text = "Record save is accomplished.";
+                        lblFillWarning.Text = "Records save is accomplished.";
                         lblFillWarning.Show();
                     }
                 }
@@ -398,33 +329,6 @@ namespace TwoCustomerThread
                     cntLine++;
                 }
             }
-            /*for (int cnt=0; cnt< CntLine(path,reportTable); cnt++)
-            {
-                //s
-            }*/
-
-            /*while
-            if (IsAssigned() && ThreadA.isFinished && ThreadB.isFinished)
-                {
-
-                }
-
-            string path = @"C:\Users\ozclk\source\repos\TwoCustomerThread\TextFile1.txt";
-            using (StreamReader sr = File.OpenText(path))
-            {
-                string s = "";
-                while ((s = sr.ReadLine()) != null)
-                {
-                    reportTable.RowCount = 1;
-                    reportTable.Rows[0].Cells[0].Value = s;
-                    reportTable.Rows[0].Cells[1].Value = int.Parse(textBox2.Text);
-                    reportTable.Rows[0].Cells[2].Value = TwoCustomerThread.ThreadA.totTime;
-                    reportTable.Rows[0].Cells[3].Value = TwoCustomerThread.ThreadA.deadLock;
-                    reportTable.Rows[0].Cells[4].Value = TwoCustomerThread.ThreadB.totTime;
-                    reportTable.Rows[0].Cells[5].Value = TwoCustomerThread.ThreadB.deadLock;
-                    reportTable.Rows[0].Cells[6].Value = TwoCustomerThread.ThreadA.isoLevel;
-                }
-            }*/
         }
 
         private void btnFill_Click(object sender, EventArgs e)
@@ -447,287 +351,3 @@ namespace TwoCustomerThread
         }
     }
 }
-
-/*
-            using (SqlDataReader reader = sqlCommand.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    int count = reader.VisibleFieldCount;
-                    MessageBox.Show(Convert.ToString(count));
-                }
-            }*
-
-/*        public void CreateCommand(String sqlTrn)
-        {
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandText = sqlTrn;
-            sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.ExecuteNonQuery();
-        }*/
-
-/*        public class ThreadType
-        {
-
-            // Static method for thread a
-            
-
-            // static method for thread b
-            
-
-        }*/
-
-/*
-                Thread thread1 = new Thread(new ThreadStart(ThreadA));
-                Thread thread2 = new Thread(new ThreadStart(ThreadA));
-                Thread thread3 = new Thread(new ThreadStart(ThreadA));
-                Thread thread4 = new Thread(new ThreadStart(ThreadA));
-                Thread thread5 = new Thread(new ThreadStart(ThreadA));
-                Thread thread6 = new Thread(new ThreadStart(ThreadB));
-                thread1.Start();
-                thread2.Start();
-                thread3.Start();
-                thread4.Start();
-                thread5.Start();
-                thread6.Start();*/
-
-/*int threadTypeA = int.Parse(textBox1.Text);
-ThreadA(threadTypeA);
-int threadTypeB = int.Parse(textBox2.Text);
-ThreadB(threadTypeA);
-
-ThreadType.threadA(threadTypeA);
-ThreadType.threadB(threadTypeB);
-System.Windows.Forms.Application.ExitThread();
-this.Close();
-
-
-
-public void ThreadA()
-{
-    int cntExe = 0, cntTran = 0, cntEx = 0;
-    var rand = new Random();
-    DateTime beginTime = DateTime.Now;
-    MessageBox.Show("thread A START: " + beginTime.ToString("T"));
-    MessageBox.Show(beginTime.ToString("T"));
-    for (int count = 0; count < 100; count++)
-    {
-
-        SqlConnection sqlConn = new SqlConnection(@"Data Source=DESKTOP-704N33C;Initial Catalog=AdventureWorks2012;Integrated Security=True;");
-        sqlConn.Open();
-
-        if ((count + 1) == 100)
-        {
-            MessageBox.Show((count + 1) + ". Thread A bağlantısı açıldı...");
-        }
-
-        SqlTransaction sqlTran = sqlConn.BeginTransaction(IsolationLevel.ReadUncommitted);
-
-        SqlCommand sqlCommand = sqlConn.CreateCommand();
-
-        sqlCommand.Connection = sqlConn;
-        sqlCommand.Transaction = sqlTran;
-
-        try
-        {
-            if (rand.NextDouble() < 0.5)
-            {
-                cntTran++;
-                sqlCommand.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
-                    "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '20110101' AND '20111231' " +
-                    "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                sqlCommand.ExecuteNonQuery();
-                cntExe++;
-                MessageBox.Show("sorgu gerçekleşti.");
-            }
-            if (rand.NextDouble() < 0.5)
-            {
-                cntTran++;
-                sqlCommand.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
-                    "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '20120101' AND '20121231' " +
-                    "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                sqlCommand.ExecuteNonQuery();
-                cntExe++;
-                MessageBox.Show("sorgu gerçekleşti.");
-            }
-            if (rand.NextDouble() < 0.5)
-            {
-                cntTran++;
-                sqlCommand.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
-                    "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '20130101' AND '20131231' " +
-                    "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                sqlCommand.ExecuteNonQuery();
-                cntExe++;
-                MessageBox.Show("sorgu gerçekleşti.");
-            }
-            if (rand.NextDouble() < 0.5)
-            {
-                cntTran++;
-                sqlCommand.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
-                    "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '20140101' AND '20141231' " +
-                    "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                sqlCommand.ExecuteNonQuery();
-                cntExe++;
-                MessageBox.Show("sorgu gerçekleşti.");
-            }
-            if (rand.NextDouble() < 0.5)
-            {
-                cntTran++;
-                sqlCommand.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
-                    "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '20150101' AND '20151231' " +
-                    "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                sqlCommand.ExecuteNonQuery();
-                cntExe++;
-                MessageBox.Show("sorgu gerçekleşti.");
-            }
-
-            sqlTran.Commit();
-
-            MessageBox.Show("Bağlantı kapatıldı.");
-            Console.WriteLine("Both records are written to database.");
-        }
-        catch (Exception e)
-        {
-            try
-            {
-                sqlTran.Rollback();
-            }
-            catch (SqlException ex)
-            {
-                if (sqlTran.Connection != null)
-                {
-                    MessageBox.Show("THREAD-A: An exception of type " + ex.GetType() +
-                        " was encountered while attempting to roll back the transaction.");
-                }
-            }
-            cntEx++;
-            MessageBox.Show("THREAD-A: An exception of type " + e.GetType() +
-                " was encountered while inserting the data.\nNeither record was written to database.");
-            MessageBox.Show("Neither record was written to database.");
-        }
-        finally
-        {
-            sqlConn.Close();
-        }
-    }
-
-    DateTime endTime = DateTime.Now;
-    MessageBox.Show(endTime.ToString("T"));
-    TimeSpan elapsed = endTime.Subtract(beginTime); // Record this value for reporting.
-    MessageBox.Show(elapsed.ToString("T"));
-    MessageBox.Show("thread A START: " + beginTime.ToString("T") + "\nthread A END: " + endTime.ToString("T") + "\nthread A TIME ELAPSE: " + elapsed.ToString("T") +
-        "\nTransaction " + cntTran + " times executed" + "\nTransaction " + (cntTran - cntExe) + " times get exception" + "\nTransaction " + (cntEx) + " times get exception");
-
-}
-
-public void ThreadB()
-{
-    int cntTran = 0;
-    var rand = new Random();
-    DateTime beginTime = DateTime.Now;
-    MessageBox.Show("thread B START: " + beginTime.ToString("T"));
-    for (int count = 0; count < 100; count++)
-    {
-        SqlConnection sqlConn = new SqlConnection(@"Data Source=DESKTOP-704N33C;Initial Catalog=AdventureWorks2012;Integrated Security=True;");
-        sqlConn.Open();
-        SqlCommand sqlCommand = sqlConn.CreateCommand();
-
-        if ((count + 1) == 1 || (count + 1) == 100)
-        {
-            MessageBox.Show((count + 1) + ". Thread B bağlantısı açıldı...");
-        }
-
-        SqlTransaction sqlTran = sqlConn.BeginTransaction(IsolationLevel.ReadUncommitted);
-
-        sqlCommand.Connection = sqlConn;
-        sqlCommand.Transaction = sqlTran;
-
-        try
-        {
-            if (rand.NextDouble() < 0.5)
-            {
-                cntTran++;
-                sqlCommand.CommandText =
-                    "SELECT SUM(Sales.SalesOrderDetail.OrderQty) FROM Sales.SalesOrderDetail WHERE UnitPrice > 100 " +
-                        "AND EXISTS(SELECT* FROM Sales.SalesOrderHeader WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID " +
-                        "AND Sales.SalesOrderHeader.OrderDate BETWEEN '20110101' AND '20111231' AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                sqlCommand.ExecuteNonQuery();
-            }
-            if (rand.NextDouble() < 0.5)
-            {
-                cntTran++;
-                sqlCommand.CommandText =
-                    "SELECT SUM(Sales.SalesOrderDetail.OrderQty) FROM Sales.SalesOrderDetail WHERE UnitPrice > 100 " +
-                        "AND EXISTS(SELECT* FROM Sales.SalesOrderHeader WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID " +
-                        "AND Sales.SalesOrderHeader.OrderDate BETWEEN '20120101' AND '20121231' AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                sqlCommand.ExecuteNonQuery();
-            }
-            if (rand.NextDouble() < 0.5)
-            {
-                cntTran++;
-                sqlCommand.CommandText =
-                    "SELECT SUM(Sales.SalesOrderDetail.OrderQty) FROM Sales.SalesOrderDetail WHERE UnitPrice > 100 " +
-                        "AND EXISTS(SELECT* FROM Sales.SalesOrderHeader WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID " +
-                        "AND Sales.SalesOrderHeader.OrderDate BETWEEN '20130101' AND '20131231' AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                sqlCommand.ExecuteNonQuery();
-            }
-            if (rand.NextDouble() < 0.5)
-            {
-                cntTran++;
-                sqlCommand.CommandText =
-                    "SELECT SUM(Sales.SalesOrderDetail.OrderQty) FROM Sales.SalesOrderDetail WHERE UnitPrice > 100 " +
-                        "AND EXISTS(SELECT* FROM Sales.SalesOrderHeader WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID " +
-                        "AND Sales.SalesOrderHeader.OrderDate BETWEEN '20140101' AND '20141231' AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                sqlCommand.ExecuteNonQuery();
-            }
-            if (rand.NextDouble() < 0.5)
-            {
-                cntTran++;
-                sqlCommand.CommandText =
-                    "SELECT SUM(Sales.SalesOrderDetail.OrderQty) FROM Sales.SalesOrderDetail WHERE UnitPrice > 100 " +
-                        "AND EXISTS(SELECT* FROM Sales.SalesOrderHeader WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID " +
-                        "AND Sales.SalesOrderHeader.OrderDate BETWEEN '20150101' AND '20151231' AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                sqlCommand.ExecuteNonQuery();
-            }
-
-            sqlTran.Commit();
-            sqlConn.Close();
-            MessageBox.Show("Bağlantı kapatıldı.");
-            Console.WriteLine("Both records are written to database.");
-        }
-        catch (Exception e)
-        {
-            try
-            {
-                sqlTran.Rollback();
-            }
-            catch (SqlException ex)
-            {
-                if (sqlTran.Connection != null)
-                {
-                    MessageBox.Show("THREAD-B: An exception of type " + ex.GetType() +
-                        " was encountered while attempting to roll back the transaction.");
-                }
-            }
-
-            MessageBox.Show("THREAD-B: An exception of type " + e.GetType() +
-                " was encountered while inserting the data.\nNeither record was written to database." + "\nTransaction " + cntTran + " Times Executed");
-            Console.WriteLine("Neither record was written to database.");
-        }
-    }
-
-    DateTime endTime = DateTime.Now;
-    MessageBox.Show("thread B END: " + endTime.ToString("T"));
-    TimeSpan elapsed = endTime.Subtract(beginTime); // Record this value for reporting.
-    MessageBox.Show("thread B TIME ELAPSE: " + elapsed.ToString("T"));
-
-    MessageBox.Show("thread B START: " + beginTime.ToString("T") + "\nthread B END: " + endTime.ToString("T") + "\nthread B TIME ELAPSE: " + elapsed.ToString("T"));
-}
-*/
-
-/*            "UPDATE Sales.SalesOrderDetail SET Address = @add, City = @cit Where FirstName = @fn and LastName = @add";
-            command.ExecuteNonQuery();
-            command.CommandText =
-                "Insert into Region (RegionID, RegionDescription) VALUES (101, 'Description')";
-            command.ExecuteNonQuery();
-            transaction.Commit();*/
