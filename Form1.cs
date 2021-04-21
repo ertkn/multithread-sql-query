@@ -34,10 +34,15 @@ namespace TwoCustomerThread
                 btnSave.Enabled = true;
 
                 //ThreadType thread = new ThreadType();
+                //ExecutorService service = Executors.newFixedThreadPool((int.Parse(textBox1.Text)+ int.Parse(textBox2.Text)));
 
-                UserDefinedThreadA(int.Parse(textBox1.Text));
-                UserDefinedThreadB(int.Parse(textBox2.Text));
+                UserDefinedThreadA(Int32.Parse(textBox1.Text));
+                UserDefinedThreadB(Int32.Parse(textBox2.Text));
 
+                /*int temp = Int32.Parse(textBox1.Text);
+                int temp2 = Int32.Parse(textBox2.Text);
+                MessageBox.Show(temp + " // " + temp2);
+                MessageBox.Show(Convert.ToString(temp + temp2));*/
             }
 
             else
@@ -84,7 +89,7 @@ namespace TwoCustomerThread
                 lblWarning.Show();
             }
         }
-
+/*
         public static Boolean IsVerified()
         {
             var rand = new Random();
@@ -93,106 +98,7 @@ namespace TwoCustomerThread
             //MessageBox.Show(condition ? "Condition True: " + condition + i : "Condition False: " + condition + i);
             return condition;
         }
-
-        public void AddColumn(SqlDataReader reader)
-        {
-            sqlGrid.ColumnCount = reader.FieldCount;
-            for (int cntClmn = 0; cntClmn < reader.FieldCount; cntClmn++)
-            {
-                sqlGrid.Columns[cntClmn].Name = reader.GetName(cntClmn);
-            }
-            reader.Close();
-        }
-        public void AddRow(SqlDataReader reader)
-        {
-
-            //String outputMessage = "outputMessage\n";
-            int cntRow = 0;
-
-            String output = "output\n";
-
-            //reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-
-                output = output + " [ " + reader.GetValue(0) + " , " + reader.GetValue(1)
-                + " ,  " + reader.GetValue(2) + "  , " + reader.GetValue(3) + " , " + reader.GetValue(4) + "]\n";
-                //MessageBox.Show(output);
-
-                //outputMessage += reader.GetValue(cntRow);
-                for (int cntCell = 0; cntCell < reader.FieldCount; cntCell++)
-                {
-                    //outputMessage += reader.GetValue(cntCell) + " - ";
-                    //MessageBox.Show(outputMessage);
-                    sqlGrid.Rows[cntRow].Cells[cntCell].Value = reader.GetValue(cntCell);
-                }
-
-                //sqlGrid.Rows.Add(outputMessage);
-                cntRow++;
-                //sqlGrid.Rows.Add();
-                //outputMessage += "\n";
-            }
-            reader.Close();
-
-        }
-
-        public int GetRowNum(SqlDataReader reader)
-        {
-            DataTable dt = new DataTable();
-            dt.Load(reader);
-            int numRows = dt.Rows.Count;
-            sqlGrid.RowCount = numRows;
-            //MessageBox.Show("Number of Rows: " + numRows);
-            reader.Close();
-            return numRows;
-            //MessageBox.Show("Number of Rows: " + numRows);
-        }
-
-        private SqlDataReader ReaderAssign (SqlDataReader reader, SqlCommand command)
-        {
-            /*if (!reader.IsClosed)
-            {
-                reader.Close();
-            }*/
-            return reader = command.ExecuteReader();
-            
-        }
-
-
-        private void btnSelect_Click(object sender, EventArgs e)
-        {
-            SqlConnection sqlConnenction = new SqlConnection(@"Data Source=DESKTOP-704N33C;Initial Catalog=AdventureWorks2012;Integrated Security=True;");
-            sqlConnenction.Open();
-
-            SqlCommand sqlCommand = new SqlCommand("SELECT TOP 10 * FROM Sales.SalesOrderDetail WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
-                "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '20140101' AND '20151231' " +
-                "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)", sqlConnenction);
-            SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-            
-            try
-            {
-
-                //sqlDataReader.Read();
-                GetRowNum(sqlDataReader);
-                //ReaderAssign(sqlDataReader,sqlCommand);
-                //sqlDataReader = sqlCommand.ExecuteReader();
-                AddColumn(ReaderAssign(sqlDataReader,sqlCommand));
-                AddRow(ReaderAssign(sqlDataReader, sqlCommand));
-
-                // Call Close when done reading.
-
-                //sqlDataReader.Close();
-                sqlCommand.Dispose();
-                sqlConnenction.Close();
-
-            }
-
-            catch (SqlException ex)
-            {
-                MessageBox.Show("An exception of type " + ex.GetType() + " was encountered while attempting to select from table.");
-            }
-        }
+*/
 
         private void ThreadForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -203,7 +109,7 @@ namespace TwoCustomerThread
         public int CntLineFromTxt(string path, DataGridView dataGrid)
         {
             int cntLine = 0;
-            int cntRow = 0;
+            //int cntRow = 0;
             using (StreamReader reader = File.OpenText(path))
             {
                 while (reader.ReadLine() != null)
@@ -230,7 +136,9 @@ namespace TwoCustomerThread
                 try
                 {
                     reportTable.RowCount = 1;
+                    reportTable.Columns[0].ValueType = typeof(Int32);
                     reportTable.Rows[0].Cells[0].Value = int.Parse(textBox1.Text);
+                    reportTable.Columns[1].ValueType = typeof(Int32);
                     reportTable.Rows[0].Cells[1].Value = int.Parse(textBox2.Text);
                     reportTable.Rows[0].Cells[2].Value = (TwoCustomerThread.ThreadA.totTime.Divide(int.Parse(textBox1.Text)));
                     reportTable.Rows[0].Cells[3].Value = TwoCustomerThread.ThreadA.deadLock;
@@ -322,7 +230,12 @@ namespace TwoCustomerThread
                     string[] cells = row.Split('-');
                     for(int cntCell=0; cntCell<cells.Length; cntCell++)
                     {
-                        loadGrid.Rows[cntLine].Cells[cntCell].Value = cells[cntCell];
+                        if (cntCell<=1)
+                        {
+                            loadGrid.Rows[cntLine].Cells[cntCell].Value = Int32.Parse(cells[cntCell]);
+                        }
+                        else
+                            loadGrid.Rows[cntLine].Cells[cntCell].Value = cells[cntCell];
                     }
                     /*string row = Convert.ToString(reader.ReadLineAsync());
                     while (reader.ReadLine().Split('-') == null)
@@ -355,3 +268,106 @@ namespace TwoCustomerThread
         }
     }
 }
+
+
+/*
+public void AddColumn(SqlDataReader reader)
+{
+    sqlGrid.ColumnCount = reader.FieldCount;
+    for (int cntClmn = 0; cntClmn < reader.FieldCount; cntClmn++)
+    {
+        sqlGrid.Columns[cntClmn].Name = reader.GetName(cntClmn);
+    }
+    reader.Close();
+}
+public void AddRow(SqlDataReader reader)
+{
+
+    //String outputMessage = "outputMessage\n";
+    int cntRow = 0;
+
+    String output = "output\n";
+
+    //reader = command.ExecuteReader();
+
+    while (reader.Read())
+    {
+
+        output = output + " [ " + reader.GetValue(0) + " , " + reader.GetValue(1)
+        + " ,  " + reader.GetValue(2) + "  , " + reader.GetValue(3) + " , " + reader.GetValue(4) + "]\n";
+        //MessageBox.Show(output);
+
+        //outputMessage += reader.GetValue(cntRow);
+        for (int cntCell = 0; cntCell < reader.FieldCount; cntCell++)
+        {
+            //outputMessage += reader.GetValue(cntCell) + " - ";
+            //MessageBox.Show(outputMessage);
+            sqlGrid.Rows[cntRow].Cells[cntCell].Value = reader.GetValue(cntCell);
+        }
+
+        //sqlGrid.Rows.Add(outputMessage);
+        cntRow++;
+        //sqlGrid.Rows.Add();
+        //outputMessage += "\n";
+    }
+    reader.Close();
+
+}
+
+public int GetRowNum(SqlDataReader reader)
+{
+    DataTable dt = new DataTable();
+    dt.Load(reader);
+    int numRows = dt.Rows.Count;
+    sqlGrid.RowCount = numRows;
+    //MessageBox.Show("Number of Rows: " + numRows);
+    reader.Close();
+    return numRows;
+    //MessageBox.Show("Number of Rows: " + numRows);
+}
+
+private SqlDataReader ReaderAssign(SqlDataReader reader, SqlCommand command)
+{
+    *//*if (!reader.IsClosed)
+    {
+        reader.Close();
+    }*//*
+    return reader = command.ExecuteReader();
+
+}
+
+
+private void btnSelect_Click(object sender, EventArgs e)
+{
+    SqlConnection sqlConnenction = new SqlConnection(@"Data Source=DESKTOP-704N33C;Initial Catalog=AdventureWorks2012;Integrated Security=True;");
+    sqlConnenction.Open();
+
+    SqlCommand sqlCommand = new SqlCommand("SELECT TOP 10 * FROM Sales.SalesOrderDetail WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
+        "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '20140101' AND '20151231' " +
+        "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)", sqlConnenction);
+    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+
+    try
+    {
+
+        //sqlDataReader.Read();
+        GetRowNum(sqlDataReader);
+        //ReaderAssign(sqlDataReader,sqlCommand);
+        //sqlDataReader = sqlCommand.ExecuteReader();
+        AddColumn(ReaderAssign(sqlDataReader, sqlCommand));
+        AddRow(ReaderAssign(sqlDataReader, sqlCommand));
+
+        // Call Close when done reading.
+
+        //sqlDataReader.Close();
+        sqlCommand.Dispose();
+        sqlConnenction.Close();
+
+    }
+
+    catch (SqlException ex)
+    {
+        MessageBox.Show("An exception of type " + ex.GetType() + " was encountered while attempting to select from table.");
+    }
+}
+*/

@@ -30,6 +30,10 @@ namespace TwoCustomerThread
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnExecute = new System.Windows.Forms.Button();
             this.lblTypeA = new System.Windows.Forms.Label();
             this.lblTypeB = new System.Windows.Forms.Label();
@@ -38,9 +42,6 @@ namespace TwoCustomerThread
             this.lblWarning = new System.Windows.Forms.Label();
             this.reportTable = new System.Windows.Forms.DataGridView();
             this.grpBox = new System.Windows.Forms.GroupBox();
-            this.sqlGrid = new System.Windows.Forms.DataGridView();
-            this.btnSelect = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
             this.btnFill = new System.Windows.Forms.Button();
             this.lblFillWarning = new System.Windows.Forms.Label();
             this.btnLoad = new System.Windows.Forms.Button();
@@ -54,7 +55,6 @@ namespace TwoCustomerThread
             this.ClmIsoType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.reportTable)).BeginInit();
             this.grpBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.sqlGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // btnExecute
@@ -124,7 +124,8 @@ namespace TwoCustomerThread
             this.reportTable.AllowUserToResizeRows = false;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.reportTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.reportTable.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.reportTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.reportTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.reportTable.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
@@ -145,7 +146,7 @@ namespace TwoCustomerThread
             this.reportTable.ReadOnly = true;
             this.reportTable.RowHeadersVisible = false;
             this.reportTable.RowTemplate.Height = 25;
-            this.reportTable.Size = new System.Drawing.Size(847, 225);
+            this.reportTable.Size = new System.Drawing.Size(847, 480);
             this.reportTable.TabIndex = 6;
             // 
             // grpBox
@@ -163,54 +164,11 @@ namespace TwoCustomerThread
             this.grpBox.TabStop = false;
             this.grpBox.Text = "Entry";
             // 
-            // sqlGrid
-            // 
-            this.sqlGrid.AllowUserToAddRows = false;
-            this.sqlGrid.AllowUserToDeleteRows = false;
-            this.sqlGrid.AllowUserToResizeColumns = false;
-            this.sqlGrid.AllowUserToResizeRows = false;
-            this.sqlGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.sqlGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.sqlGrid.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
-            this.sqlGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.sqlGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.sqlGrid.Location = new System.Drawing.Point(130, 314);
-            this.sqlGrid.Name = "sqlGrid";
-            this.sqlGrid.RowHeadersVisible = false;
-            this.sqlGrid.RowTemplate.Height = 25;
-            this.sqlGrid.Size = new System.Drawing.Size(847, 186);
-            this.sqlGrid.TabIndex = 7;
-            // 
-            // btnSelect
-            // 
-            this.btnSelect.AutoSize = true;
-            this.btnSelect.Font = new System.Drawing.Font("Gill Sans MT Condensed", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnSelect.Location = new System.Drawing.Point(40, 339);
-            this.btnSelect.Name = "btnSelect";
-            this.btnSelect.Size = new System.Drawing.Size(78, 35);
-            this.btnSelect.TabIndex = 8;
-            this.btnSelect.Text = "List";
-            this.btnSelect.UseVisualStyleBackColor = true;
-            this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
-            // 
-            // label2
-            // 
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
-            this.label2.ForeColor = System.Drawing.Color.Crimson;
-            this.label2.Location = new System.Drawing.Point(40, 314);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(78, 22);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Only Integer!";
-            this.label2.Visible = false;
-            // 
             // btnFill
             // 
             this.btnFill.Enabled = false;
             this.btnFill.Font = new System.Drawing.Font("Rockwell Condensed", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnFill.Location = new System.Drawing.Point(130, 243);
+            this.btnFill.Location = new System.Drawing.Point(49, 210);
             this.btnFill.Name = "btnFill";
             this.btnFill.Size = new System.Drawing.Size(75, 30);
             this.btnFill.TabIndex = 10;
@@ -222,17 +180,17 @@ namespace TwoCustomerThread
             // 
             this.lblFillWarning.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.lblFillWarning.ForeColor = System.Drawing.Color.Crimson;
-            this.lblFillWarning.Location = new System.Drawing.Point(130, 276);
+            this.lblFillWarning.Location = new System.Drawing.Point(19, 339);
             this.lblFillWarning.Name = "lblFillWarning";
-            this.lblFillWarning.Size = new System.Drawing.Size(225, 22);
+            this.lblFillWarning.Size = new System.Drawing.Size(106, 88);
             this.lblFillWarning.TabIndex = 6;
-            this.lblFillWarning.Text = "Threads are not finished! Please wait...";
+            this.lblFillWarning.Text = "Threads are not finished!         Please wait...";
             this.lblFillWarning.Visible = false;
             // 
             // btnLoad
             // 
             this.btnLoad.Font = new System.Drawing.Font("Rockwell Condensed", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnLoad.Location = new System.Drawing.Point(292, 243);
+            this.btnLoad.Location = new System.Drawing.Point(49, 306);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(75, 30);
             this.btnLoad.TabIndex = 11;
@@ -244,7 +202,7 @@ namespace TwoCustomerThread
             // 
             this.btnSave.Enabled = false;
             this.btnSave.Font = new System.Drawing.Font("Rockwell Condensed", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnSave.Location = new System.Drawing.Point(211, 243);
+            this.btnSave.Location = new System.Drawing.Point(49, 259);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 30);
             this.btnSave.TabIndex = 12;
@@ -254,22 +212,26 @@ namespace TwoCustomerThread
             // 
             // ClmnNumA
             // 
+            dataGridViewCellStyle2.NullValue = "0";
+            this.ClmnNumA.DefaultCellStyle = dataGridViewCellStyle2;
             this.ClmnNumA.HeaderText = "Number of Type A Users";
             this.ClmnNumA.Name = "ClmnNumA";
             this.ClmnNumA.ReadOnly = true;
             this.ClmnNumA.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.ClmnNumA.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // ClmnNumB
             // 
+            dataGridViewCellStyle3.NullValue = "0";
+            this.ClmnNumB.DefaultCellStyle = dataGridViewCellStyle3;
             this.ClmnNumB.HeaderText = "Number of Type B Users";
             this.ClmnNumB.Name = "ClmnNumB";
             this.ClmnNumB.ReadOnly = true;
             this.ClmnNumB.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.ClmnNumB.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // ClmnAvgTimeA
             // 
+            dataGridViewCellStyle4.NullValue = "0";
+            this.ClmnAvgTimeA.DefaultCellStyle = dataGridViewCellStyle4;
             this.ClmnAvgTimeA.HeaderText = "Average Time of Type A Threads";
             this.ClmnAvgTimeA.Name = "ClmnAvgTimeA";
             this.ClmnAvgTimeA.ReadOnly = true;
@@ -284,6 +246,8 @@ namespace TwoCustomerThread
             // 
             // ClmnAvgTimeB
             // 
+            dataGridViewCellStyle5.NullValue = "0";
+            this.ClmnAvgTimeB.DefaultCellStyle = dataGridViewCellStyle5;
             this.ClmnAvgTimeB.HeaderText = "Average Time of Type B Threads";
             this.ClmnAvgTimeB.Name = "ClmnAvgTimeB";
             this.ClmnAvgTimeB.ReadOnly = true;
@@ -301,6 +265,7 @@ namespace TwoCustomerThread
             this.ClmIsoType.HeaderText = "Isolation Type";
             this.ClmIsoType.Name = "ClmIsoType";
             this.ClmIsoType.ReadOnly = true;
+            this.ClmIsoType.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
             // ThreadForm
             // 
@@ -309,11 +274,8 @@ namespace TwoCustomerThread
             this.ClientSize = new System.Drawing.Size(981, 504);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnLoad);
-            this.Controls.Add(this.btnSelect);
             this.Controls.Add(this.lblFillWarning);
-            this.Controls.Add(this.label2);
             this.Controls.Add(this.btnFill);
-            this.Controls.Add(this.sqlGrid);
             this.Controls.Add(this.reportTable);
             this.Controls.Add(this.grpBox);
             this.Location = new System.Drawing.Point(100, 300);
@@ -326,9 +288,7 @@ namespace TwoCustomerThread
             ((System.ComponentModel.ISupportInitialize)(this.reportTable)).EndInit();
             this.grpBox.ResumeLayout(false);
             this.grpBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.sqlGrid)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -342,9 +302,6 @@ namespace TwoCustomerThread
         private System.Windows.Forms.Label lblWarning;
         private System.Windows.Forms.TextBox textBox1;
         public System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.DataGridView sqlGrid;
-        private System.Windows.Forms.Button btnSelect;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnFill;
         private System.Windows.Forms.Label lblFillWarning;
         private System.Windows.Forms.Button btnLoad;

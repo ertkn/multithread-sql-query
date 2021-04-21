@@ -46,46 +46,55 @@ namespace TwoCustomerThread
 
         public static bool isFinished {get { return _isfinished; } set { _isfinished = value; }}
 
-        public void SqlUpdateQuery(int fromDate, int toDate,SqlCommand command, SqlTransaction sqlTran)
+        public void SqlUpdateQuery(int fromDate, int toDate,SqlCommand command)
         {
-            try
-            {
-                if (this.rand.NextDouble() < 0.5)
-                {
-                    //cntExe++;
-                    command.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
-                        "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '" + fromDate + "' AND '" + toDate + "' " +
-                        "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                    command.ExecuteNonQuery();
-                    //MessageBox.Show("sorgu gerçekleşti.");
-                }
-            }
-            catch (SqlException e)
-            {
-                if(e.Number == 1205)
-                {
-                    try
-                    {
-                        cntDead++;
-                        MessageBox.Show("Inner Try");
-                        sqlTran.Rollback();
-                    }
-                    catch (SqlException ex)
-                    {
-                        /*if (sqlTran.Connection != null)
+            /*            try
                         {
-                            MessageBox.Show("THREAD-A: An exception of type " + ex.GetType() +
-                                " was encountered while attempting to roll back the transaction.");
+                            if (this.rand.NextDouble() < 0.5)
+                            {
+                                //cntExe++;
+                                command.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
+                                    "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '" + fromDate + "' AND '" + toDate + "' " +
+                                    "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
+                                command.ExecuteNonQuery();
+                                //MessageBox.Show("sorgu gerçekleşti.");
+                            }
+                        }
+                        catch (SqlException e)
+                        {
+                            if(e.Number == 1205)
+                            {
+                                try
+                                {
+                                    cntDead++;
+                                    MessageBox.Show("Inner Try");
+                                    sqlTran.Rollback();
+                                }
+                                catch (SqlException ex)
+                                {
+                                    *//*if (sqlTran.Connection != null)
+                                    {
+                                        MessageBox.Show("THREAD-A: An exception of type " + ex.GetType() +
+                                            " was encountered while attempting to roll back the transaction.");
+                                    }*//*
+                                    throw new Exception(ex.Message);
+                                }
+                            }
                         }*/
-                        throw new Exception(ex.Message);
-                    }
-                }
+            if (this.rand.NextDouble() < 0.5)
+            {
+                //cntExe++;
+                command.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
+                    "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '" + fromDate + "' AND '" + toDate + "' " +
+                    "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
+                command.ExecuteNonQuery();
+                //MessageBox.Show("sorgu gerçekleşti.");
             }
         }
 
         public void ThrQuery()
         {
-            string connString = "Data Source= DESKTOP-704N33C;Initial Catalog=AdventureWorks2012;Integrated Security=True;Connection Timeout=30;";
+            string strConn = "Data Source= DESKTOP-704N33C;Initial Catalog=AdventureWorks2012;Integrated Security=True;Connection Timeout=30;Max Pool Size=500;";
             /*SqlConnection sqlConn;
             SqlTransaction sqlTran;
             SqlCommand sqlCommand;
@@ -97,12 +106,11 @@ namespace TwoCustomerThread
             {
                 isFinished = false;
                
-                using(SqlConnection sqlConn = new SqlConnection(connString))
+                using(SqlConnection sqlConn = new SqlConnection(strConn))
                 {
-                    sqlConn.Open();
                     using(SqlCommand sqlCommand = sqlConn.CreateCommand())
                     {
-
+                        sqlConn.Open();
                         SqlTransaction sqlTran = sqlConn.BeginTransaction(IsolationLevel.Serializable);
 
                         isoLevel = (Convert.ToString(sqlTran.IsolationLevel));
@@ -113,11 +121,11 @@ namespace TwoCustomerThread
                         try
                         {
 
-                            SqlUpdateQuery(20110101, 20111231, sqlCommand, sqlTran);
-                            SqlUpdateQuery(20120101, 20121231, sqlCommand, sqlTran);
-                            SqlUpdateQuery(20130101, 20131231, sqlCommand, sqlTran);
-                            SqlUpdateQuery(20140101, 20141231, sqlCommand, sqlTran);
-                            SqlUpdateQuery(20150101, 20151231, sqlCommand, sqlTran);
+                            SqlUpdateQuery(20110101, 20111231, sqlCommand);
+                            SqlUpdateQuery(20120101, 20121231, sqlCommand);
+                            SqlUpdateQuery(20130101, 20131231, sqlCommand);
+                            SqlUpdateQuery(20140101, 20141231, sqlCommand);
+                            SqlUpdateQuery(20150101, 20151231, sqlCommand);
 
                             sqlTran.Commit();
                         }
@@ -126,19 +134,23 @@ namespace TwoCustomerThread
                             if (e.Number == 1205)
                             {
                                 MessageBox.Show("Outter Try");
-                                cntDead++;
+                                //cntDead += 1;
+                                _cntDead += 1;
                                 try
                                 {
                                     sqlTran.Rollback();
                                 }
-                                catch (SqlException ex)
+                                catch
                                 {
-                                    throw new Exception(ex.Message);
-                                }
-                            }
-                            else
-                                throw new Exception(e.Message);
 
+                                }
+
+                            }
+                            if (e.Number == 233)
+                            {
+                                SqlConnection.ClearPool(sqlConn);
+                                //SqlConnection.ClearAllPools();
+                            }
                         }
                         finally
                         {
@@ -160,12 +172,16 @@ namespace TwoCustomerThread
             elapseTime = endTime.Subtract(bgnTime); // Record this value for reporting.
             
             totTime += elapseTime;
-            deadLock += cntDead;
+            _deadLock += cntDead;
+            if (_cntDead > 0)
+            {
+                MessageBox.Show(thread.Name+"'s deadlock: "+_cntDead+"Total Deadlock: "+_deadLock);
+            }
             isFinished = true;
         }
     }
 }
-
+//public static void ClearPool(SqlConnection connection)
 /*if (rand.NextDouble() < 0.5)
                     {
                         cntExe++;
