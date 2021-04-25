@@ -10,22 +10,19 @@ namespace TwoCustomerThread
 {
     class ThreadA 
     {
-        private Thread _thread;
-        private DateTime _bgnTime;
-        private DateTime _endTime;
-        //private TimeSpan _elapseTime;
-        private int _cntDead = 0;
-        private int _cntQuery = 0;
-        private int _cntAfterQuery = 0;
+        private Thread _thread; //thread instance
+        private DateTime _bgnTime; // thread begin
+        private DateTime _endTime; //thread end
+        private int _cntDeadLock; //deadlock counter
+        private int _cntTimeout ; //timeout counter
+        private int _cntQuery ; // query counter
 
-        static public int sttcAfterQuery =0;
-        static public int[] deadList = new int[100];
-        static public int sttcQueryCount = 0;
-        static private TimeSpan _totTime;
-        static private int sttcDeadLock;
-        static private string _isoLevel;
-        static private bool _isfinished = false;
-        static public Random rand = new Random();
+        static private int _sttcQueryCount; //static query counter
+        static private TimeSpan _totTime; //static elapse time
+        static private int sttcDeadLock; //static deadlock counter
+        static private string _isoLevel; //isolation level 
+        static private bool _isfinished = false; //thread execution controler 
+        static private Random rand = new Random(); //random num creator
 
         public ThreadA(int thrNum)
         {
@@ -41,11 +38,13 @@ namespace TwoCustomerThread
 
         public DateTime endTime{get { return _endTime; } set { _endTime = value; }}
 
-        //public TimeSpan elapseTime{get { return _elapseTime; } set { _elapseTime = value; }}
+        public int cntDead { get { return _cntDeadLock; } set { _cntDeadLock = value; } }
 
-        public int cntDead { get { return _cntDead; } set { _cntDead = value; } }
+        public int cntTimeout { get { return _cntTimeout; } set { _cntTimeout = value; } }
 
         public static TimeSpan totTime{get { return _totTime; } set { _totTime = value; }}
+
+        public static int sttcQueryCount { get { return _sttcQueryCount; } set { _sttcQueryCount = value; }}
 
         public static int deadLock {get { return sttcDeadLock; } set { sttcDeadLock = value; }}
 
@@ -96,8 +95,6 @@ namespace TwoCustomerThread
         {
             string strConn = "Data Source= DESKTOP-704N33C;Initial Catalog=AdventureWorks2012;Integrated Security=True;Max Pool Size=200;";
             this.bgnTime = DateTime.Now;
-            //MessageBox.Show(beginTime.ToString("T"));
-            //string cmd = "";
             for (int count = 0; count < 100; count++)
             {
                 isFinished = false;
@@ -107,7 +104,7 @@ namespace TwoCustomerThread
                     using(SqlCommand sqlCommand = sqlConn.CreateCommand())
                     {
                         sqlConn.Open();
-                        SqlTransaction sqlTran = sqlConn.BeginTransaction(IsolationLevel.ReadUncommitted);
+                        SqlTransaction sqlTran = sqlConn.BeginTransaction(IsolationLevel.Serializable);
 
                         isoLevel = (Convert.ToString(sqlTran.IsolationLevel));
 
@@ -132,7 +129,6 @@ namespace TwoCustomerThread
                                 //cmd += Convert.ToString(sqlCommand.ExecuteNonQuery()) + "//";
                                 //sqlCommand.CommandTimeout = 1200;
                                 sqlCommand.ExecuteNonQuery();
-                                _cntAfterQuery += 1;
                                 //MessageBox.Show(count+". cycle--First query:"+a);
                             }
                             if (rand.NextDouble() < 0.5)
@@ -141,11 +137,7 @@ namespace TwoCustomerThread
                                 sqlCommand.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
                                     "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '20120101' AND '20121231' " +
                                     "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                                //cmd += Convert.ToString(sqlCommand.ExecuteNonQuery()) + "//";
-                                //sqlCommand.CommandTimeout = 1200;
                                 sqlCommand.ExecuteNonQuery();
-                                _cntAfterQuery += 1;
-                                //MessageBox.Show(count+". cycle--Second query:"+a);
                             }
                             if (rand.NextDouble() < 0.5)
                             {
@@ -153,11 +145,7 @@ namespace TwoCustomerThread
                                 sqlCommand.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
                                     "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '20130101' AND '20131231' " +
                                     "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                                //cmd += Convert.ToString(sqlCommand.ExecuteNonQuery()) + "//";
-                                //sqlCommand.CommandTimeout = 1200;
                                 sqlCommand.ExecuteNonQuery();
-                                _cntAfterQuery += 1;
-                                //MessageBox.Show(count+". cycle--Third query:"+a);
                             }
                             if (rand.NextDouble() < 0.5)
                             {
@@ -165,11 +153,7 @@ namespace TwoCustomerThread
                                 sqlCommand.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
                                     "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '20140101' AND '20141231' " +
                                     "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                                //cmd += Convert.ToString(sqlCommand.ExecuteNonQuery()) + "//";
-                                //sqlCommand.CommandTimeout = 1200;
                                 sqlCommand.ExecuteNonQuery();
-                                _cntAfterQuery += 1;
-                                //MessageBox.Show(count+". cycle--Fourth query:"+a);
                             }
                             if (rand.NextDouble() < 0.5)
                             {
@@ -177,11 +161,7 @@ namespace TwoCustomerThread
                                 sqlCommand.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
                                     "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '20150101' AND '20151231' " +
                                     "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                                //cmd += Convert.ToString(sqlCommand.ExecuteNonQuery());
-                                //sqlCommand.CommandTimeout = 1200;
                                 sqlCommand.ExecuteNonQuery();
-                                _cntAfterQuery += 1;
-                                //MessageBox.Show(count+". cycle--Fifth query:"+a);
                             }
 
                             sqlTran.Commit();
@@ -191,9 +171,7 @@ namespace TwoCustomerThread
 
                             if (e.Number == 1205)
                             {
-                                deadList[count] += 1;
-                                _cntDead += 1;
-                                //MessageBox.Show("Exception Given 1205A: " + e.Message);
+                                _cntDeadLock += 1;
                                 ShowException(e.Message);
 
                                 try
@@ -210,13 +188,11 @@ namespace TwoCustomerThread
                             {
                                 SqlConnection.ClearPool(sqlConn);
                                 ShowException(e.Message);
-                                //SqlConnection.ClearAllPools();
                             }
                             else
                             {
-                                _cntDead += 1;
+                                _cntTimeout += 1;
                                 ShowException(e.Message);
-                                //MessageBox.Show("Exception Given: "+e.Message);
                             }
                         }
                         finally
@@ -224,33 +200,20 @@ namespace TwoCustomerThread
                             sqlCommand.Dispose();
                             sqlConn.Close();
                             sqlConn.Dispose();
-                            //cmd += "["+count + "]. \t\t";
                         }
                     }
                 }
             }
-            //MessageBox.Show(cmd);
-            endTime = DateTime.Now;
-
-            /*MessageBox.Show(endTime.ToString("T"));
-            MessageBox.Show(elapsed.ToString("T"));*/
-            
-            //elapseTime = endTime.Subtract(bgnTime); // Record this value for reporting.
-            
+            endTime = DateTime.Now;         
             totTime += endTime.Subtract(bgnTime);
             sttcDeadLock += cntDead;
             sttcQueryCount += _cntQuery;
-            sttcAfterQuery += this._cntAfterQuery;
-            /*            if (_cntDead > 0)
-                        {
-                            MessageBox.Show(thread.Name+"'s deadlock: "+_cntDead+"Total Deadlock: "+_deadLock);
-                        }*/
             isFinished = true;
             MainWindow.window.ThreadStatus("["+thread.Name + "A] finished in: " + endTime.Subtract(bgnTime) + " time. Query: " + _cntQuery + " Deadlock count: " +cntDead);
         }
         public void ShowException(string exception)
         {
-            MainWindow.window.ThreadStatus("[" + thread.Name + "A] --> " + exception + ". Query: " + _cntQuery + " Deadlock count: " + cntDead);
+            MainWindow.window.ThreadStatus("[" + thread.Name + "A] --> " + exception + ". Query: " + _cntQuery + " Deadlock count: " + cntDead + " Timeout count: " + _cntTimeout);
         }
     }
 }

@@ -302,7 +302,6 @@ namespace TwoCustomerThread
             this.Controls.Add(this.btnResult);
             this.Controls.Add(this.reportTable);
             this.Controls.Add(this.grpBox);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Location = new System.Drawing.Point(100, 300);
             this.Name = "MainWindow";
             this.ShowIcon = false;

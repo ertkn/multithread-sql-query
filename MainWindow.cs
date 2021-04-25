@@ -27,14 +27,6 @@ namespace TwoCustomerThread
             //MessageBox.Show("loaded...");
         }
 
-/*        public void ThreadStatus(string threadInfo)
-        {
-            this.Invoke(new EventHandler(delegate
-            {
-                txtStat.AppendText(threadInfo);
-            }));
-        }
-*/
         private void btnExecute_Click(object sender, EventArgs e)
         {
 
@@ -93,16 +85,6 @@ namespace TwoCustomerThread
                 lblWarning.Show();
             }
         }
-/*
-        public static Boolean IsVerified()
-        {
-            var rand = new Random();
-            double randNum = rand.NextDouble();
-            var condition = randNum < 0.5;
-            //MessageBox.Show(condition ? "Condition True: " + condition + i : "Condition False: " + condition + i);
-            return condition;
-        }
-*/
 
         private void ThreadForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -132,16 +114,6 @@ namespace TwoCustomerThread
                 return true;
         }
 
-/*        public int dlockCycle()
-        {
-            int deadlock = 0;
-            for (int count = 0; count < ThreadA.deadList.Length; count++)
-            {
-                if (ThreadA.deadList[count] > 0) { deadlock++; }
-            }
-            return deadlock;
-        }*/
-
         public void ResultTable()
         {
             if (IsAssigned() && ThreadA.isFinished && ThreadB.isFinished)
@@ -160,7 +132,7 @@ namespace TwoCustomerThread
                     reportTable.Rows[0].Cells[5].Value = TwoCustomerThread.ThreadB.deadLock;
                     reportTable.Rows[0].Cells[6].Value = TwoCustomerThread.ThreadA.isoLevel;
                     reportTable.Columns[7].ValueType = typeof(Int32);
-                    reportTable.Rows[0].Cells[7].Value = (ThreadA.sttcQueryCount + ThreadB.sttcQueryCount)+ "//Query-Exc: " + (ThreadA.sttcAfterQuery+ThreadB.sttcAfterQuery);
+                    reportTable.Rows[0].Cells[7].Value = (ThreadA.sttcQueryCount + ThreadB.sttcQueryCount);
 /*                    reportTable.Columns[8].ValueType = typeof(Int32);
                     reportTable.Rows[0].Cells[8].Value = (ThreadA.successCnt + ThreadB.successCnt);
                     reportTable.Rows[0].Cells[9].Value = Convert.ToString(ThreadA.deadList) + " /// " + Convert.ToString(ThreadB.deadList);
