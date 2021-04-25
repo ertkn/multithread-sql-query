@@ -18,7 +18,7 @@ namespace TwoCustomerThread
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ThreadForm());
+            Application.Run(new MainWindow());
 
         }
 
