@@ -39,18 +39,14 @@ namespace TwoCustomerThread
                 btnLoad.Enabled = true;
                 btnSave.Enabled = true;
 
-                //ThreadType thread = new ThreadType();
-                //ExecutorService service = Executors.newFixedThreadPool((int.Parse(textBox1.Text)+ int.Parse(textBox2.Text)));
-
                 UserDefinedThreadA(Int32.Parse(txtBoxA.Text));
                 UserDefinedThreadB(Int32.Parse(txtBoxB.Text));
-                //window.ShowDialog();
+
                 window.Show();
             }
 
             else
                 lblWarning.Show();
-            //this.Close();
         }
 
         public void UserDefinedThreadA(int threadNum)
@@ -95,7 +91,6 @@ namespace TwoCustomerThread
         public int CntLineFromTxt(string path, DataGridView dataGrid)
         {
             int cntLine = 0;
-            //int cntRow = 0;
             using (StreamReader reader = File.OpenText(path))
             {
                 while (reader.ReadLine() != null)
@@ -133,22 +128,12 @@ namespace TwoCustomerThread
                     reportTable.Rows[0].Cells[6].Value = TwoCustomerThread.ThreadA.isoLevel;
                     reportTable.Columns[7].ValueType = typeof(Int32);
                     reportTable.Rows[0].Cells[7].Value = (ThreadA.sttcQueryCount + ThreadB.sttcQueryCount);
-/*                    reportTable.Columns[8].ValueType = typeof(Int32);
-                    reportTable.Rows[0].Cells[8].Value = (ThreadA.successCnt + ThreadB.successCnt);
-                    reportTable.Rows[0].Cells[9].Value = Convert.ToString(ThreadA.deadList) + " /// " + Convert.ToString(ThreadB.deadList);
-                    string resultsA = string.Join("-", ThreadA.deadList.Select(i => i.ToString()).ToArray());
-                    string resultsB = string.Join("-", ThreadB.deadList.Select(i => i.ToString()).ToArray());
-                    reportTable.Rows[0].Cells[8].Value = "Deadlock ThreadA:"+resultsA +"Deadlock ThreadB:"+ resultsB;*/
-                    //reportTable.Rows[0].Cells[9].Value = ThreadA.deadList.Sum();
                 }
                 catch
                 {
                     lblFillWarning.Text = "Threads are working. Please wait...";
                     lblFillWarning.Show();
                     reportTable.Rows.Clear();
-                    /*reportTable.DataSource = null;
-                    reportTable.Refresh();
-                    MessageBox.Show("Wait until the thread queries end!\nException Type is :" + e);*/
                 }
             }
             else
@@ -164,9 +149,7 @@ namespace TwoCustomerThread
             if (IsAssigned() && ThreadA.isFinished && ThreadB.isFinished)
             {
                 try
-                {
-                    //string path = @"C:\Users\ozclk\Documents\GitHub\multithread-sql-query\TwoCustomerThread\TextFile1.txt";
-                    
+                {                    
                     if (!File.Exists(textPath))
                     {
                         using (StreamWriter sw = File.CreateText(textPath))
@@ -180,9 +163,6 @@ namespace TwoCustomerThread
                                                       Convert.ToString(ThreadA.sttcQueryCount + ThreadB.sttcQueryCount);
                                                         
                             sw.WriteLine(saveString);
-
-                            /*                            File.WriteAllText(@"C:\Users\ozclk\source\repos\TwoCustomerThread\TextFile1.txt", saveString);
-                                                        MessageBox.Show(saveString);*/
                         }
                     }
 
@@ -231,19 +211,13 @@ namespace TwoCustomerThread
                         string[] cells = row.Split('-');
                         for (int cntCell = 0; cntCell < cells.Length; cntCell++)
                         {
-                            if (cntCell <= 1 || cntCell == 7)
+                            if (cntCell <= 1 || cntCell == 3 || cntCell == 5 || cntCell == 7 )
                             {
                                 loadGrid.Rows[cntLine].Cells[cntCell].Value = Int32.Parse(cells[cntCell]);
                             }
                             else
                                 loadGrid.Rows[cntLine].Cells[cntCell].Value = cells[cntCell];
                         }
-                        /*string row = Convert.ToString(reader.ReadLineAsync());
-                        while (reader.ReadLine().Split('-') == null)
-                        {
-                            cntCell++;
-                        }
-                        */
                         cntLine++;
                     }
                 }
@@ -263,16 +237,15 @@ namespace TwoCustomerThread
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            string path = @"C:\Users\ozclk\Documents\GitHub\multithread-sql-query\TwoCustomerThread\TextFile1.txt";
+            string path = @"C:\Users\ozclk\Documents\GitHub\multithread-sql-query\TwoCustomerThread\ResultText.txt";
             SaveTableData(path);
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
             reportTable.Rows.Clear();
-            string path = @"C:\Users\ozclk\Documents\GitHub\multithread-sql-query\TwoCustomerThread\TextFile1.txt";
+            string path = @"C:\Users\ozclk\Documents\GitHub\multithread-sql-query\TwoCustomerThread\ResultText.txt";
             LoadTableData(path, reportTable);
-            //LoadTableData();
         }
     }
 }

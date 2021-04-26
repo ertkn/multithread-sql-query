@@ -46,7 +46,7 @@ namespace TwoCustomerThread
             this.txtStat.Name = "txtStat";
             this.txtStat.ReadOnly = true;
             this.txtStat.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtStat.Size = new System.Drawing.Size(576, 351);
+            this.txtStat.Size = new System.Drawing.Size(580, 351);
             this.txtStat.TabIndex = 0;
             // 
             // ThreadWindow
@@ -58,7 +58,7 @@ namespace TwoCustomerThread
             this.ClientSize = new System.Drawing.Size(600, 375);
             this.Controls.Add(this.txtStat);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Location = new System.Drawing.Point(1100, 300);
+            this.Location = new System.Drawing.Point(1050, 300);
             this.Name = "ThreadWindow";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

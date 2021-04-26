@@ -36,8 +36,6 @@ namespace TwoCustomerThread
 
         public DateTime endTime { get { return _endTime; } set { _endTime = value; } }
 
-        //public TimeSpan elapseTime { get { return _elapseTime; } set { _elapseTime = value; } }
-
         public int cntDead { get { return _cntDeadLock; } set { _cntDeadLock = value; } }
         
         public int cntTimeout { get { return _cntTimeout; } set { _cntTimeout= value; } }
@@ -106,7 +104,7 @@ namespace TwoCustomerThread
                     using (SqlCommand sqlCommand = sqlConn.CreateCommand())
                     {
 
-                        SqlTransaction sqlTran = sqlConn.BeginTransaction(IsolationLevel.Serializable);
+                        SqlTransaction sqlTran = sqlConn.BeginTransaction(IsolationLevel.RepeatableRead);
 
                         sqlCommand.Connection = sqlConn;
                         sqlCommand.Transaction = sqlTran;
@@ -127,10 +125,8 @@ namespace TwoCustomerThread
                                     "SELECT SUM(Sales.SalesOrderDetail.OrderQty) FROM Sales.SalesOrderDetail WHERE UnitPrice > 100 " +
                                         "AND EXISTS(SELECT* FROM Sales.SalesOrderHeader WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID " +
                                         "AND Sales.SalesOrderHeader.OrderDate BETWEEN '20110101' AND '20111231' AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                                //cmd += Convert.ToString(sqlCommand.ExecuteScalar()) + "//";
                                 //sqlCommand.CommandTimeout = 1200;
                                 sqlCommand.ExecuteNonQuery();
-                                //MessageBox.Show(count + ". cycle--First query:" + a);
                             }
                             if (rand.NextDouble() < 0.5)
                             {

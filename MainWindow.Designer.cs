@@ -29,11 +29,11 @@ namespace TwoCustomerThread
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnExecute = new System.Windows.Forms.Button();
             this.lblTypeA = new System.Windows.Forms.Label();
             this.lblTypeB = new System.Windows.Forms.Label();
@@ -54,7 +54,6 @@ namespace TwoCustomerThread
             this.lblFillWarning = new System.Windows.Forms.Label();
             this.btnLoad = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
-            this.txtStat = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.reportTable)).BeginInit();
             this.grpBox.SuspendLayout();
             this.SuspendLayout();
@@ -122,12 +121,14 @@ namespace TwoCustomerThread
             // 
             this.reportTable.AllowUserToAddRows = false;
             this.reportTable.AllowUserToDeleteRows = false;
+            this.reportTable.AllowUserToOrderColumns = true;
             this.reportTable.AllowUserToResizeColumns = false;
             this.reportTable.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.reportTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.reportTable.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            dataGridViewCellStyle11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.reportTable.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle11;
+            this.reportTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.reportTable.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.reportTable.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.reportTable.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -149,13 +150,14 @@ namespace TwoCustomerThread
             this.reportTable.ReadOnly = true;
             this.reportTable.RowHeadersVisible = false;
             this.reportTable.RowTemplate.Height = 25;
-            this.reportTable.Size = new System.Drawing.Size(847, 480);
+            this.reportTable.Size = new System.Drawing.Size(827, 480);
             this.reportTable.TabIndex = 6;
             // 
             // ClmnNumA
             // 
-            dataGridViewCellStyle2.NullValue = "0";
-            this.ClmnNumA.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle12.NullValue = "0";
+            this.ClmnNumA.DefaultCellStyle = dataGridViewCellStyle12;
+            this.ClmnNumA.FillWeight = 10F;
             this.ClmnNumA.HeaderText = "Number of Type A Users";
             this.ClmnNumA.Name = "ClmnNumA";
             this.ClmnNumA.ReadOnly = true;
@@ -163,8 +165,9 @@ namespace TwoCustomerThread
             // 
             // ClmnNumB
             // 
-            dataGridViewCellStyle3.NullValue = "0";
-            this.ClmnNumB.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle13.NullValue = "0";
+            this.ClmnNumB.DefaultCellStyle = dataGridViewCellStyle13;
+            this.ClmnNumB.FillWeight = 10F;
             this.ClmnNumB.HeaderText = "Number of Type B Users";
             this.ClmnNumB.Name = "ClmnNumB";
             this.ClmnNumB.ReadOnly = true;
@@ -172,8 +175,9 @@ namespace TwoCustomerThread
             // 
             // ClmnAvgTimeA
             // 
-            dataGridViewCellStyle4.NullValue = "0";
-            this.ClmnAvgTimeA.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle14.NullValue = "0";
+            this.ClmnAvgTimeA.DefaultCellStyle = dataGridViewCellStyle14;
+            this.ClmnAvgTimeA.FillWeight = 17.5F;
             this.ClmnAvgTimeA.HeaderText = "Average Time of Type A Threads";
             this.ClmnAvgTimeA.Name = "ClmnAvgTimeA";
             this.ClmnAvgTimeA.ReadOnly = true;
@@ -181,6 +185,7 @@ namespace TwoCustomerThread
             // 
             // ClmnDLockA
             // 
+            this.ClmnDLockA.FillWeight = 10F;
             this.ClmnDLockA.HeaderText = "Number of Deadlocks Encounterd by Type A Users";
             this.ClmnDLockA.Name = "ClmnDLockA";
             this.ClmnDLockA.ReadOnly = true;
@@ -188,8 +193,9 @@ namespace TwoCustomerThread
             // 
             // ClmnAvgTimeB
             // 
-            dataGridViewCellStyle5.NullValue = "0";
-            this.ClmnAvgTimeB.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle15.NullValue = "0";
+            this.ClmnAvgTimeB.DefaultCellStyle = dataGridViewCellStyle15;
+            this.ClmnAvgTimeB.FillWeight = 17.5F;
             this.ClmnAvgTimeB.HeaderText = "Average Time of Type B Threads";
             this.ClmnAvgTimeB.Name = "ClmnAvgTimeB";
             this.ClmnAvgTimeB.ReadOnly = true;
@@ -197,6 +203,7 @@ namespace TwoCustomerThread
             // 
             // ClmnDLockB
             // 
+            this.ClmnDLockB.FillWeight = 10F;
             this.ClmnDLockB.HeaderText = "Number of Deadlocks Encounterd by Type B Users";
             this.ClmnDLockB.Name = "ClmnDLockB";
             this.ClmnDLockB.ReadOnly = true;
@@ -204,6 +211,7 @@ namespace TwoCustomerThread
             // 
             // ClmIsoType
             // 
+            this.ClmIsoType.FillWeight = 17.5F;
             this.ClmIsoType.HeaderText = "Isolation Type";
             this.ClmIsoType.Name = "ClmIsoType";
             this.ClmIsoType.ReadOnly = true;
@@ -211,6 +219,7 @@ namespace TwoCustomerThread
             // 
             // clmnQuery
             // 
+            this.clmnQuery.FillWeight = 10F;
             this.clmnQuery.HeaderText = "Query Count ";
             this.clmnQuery.Name = "clmnQuery";
             this.clmnQuery.ReadOnly = true;
@@ -277,32 +286,18 @@ namespace TwoCustomerThread
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // txtStat
-            // 
-            this.txtStat.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtStat.Location = new System.Drawing.Point(983, 15);
-            this.txtStat.Multiline = true;
-            this.txtStat.Name = "txtStat";
-            this.txtStat.PlaceholderText = "Thread Current Status";
-            this.txtStat.ReadOnly = true;
-            this.txtStat.Size = new System.Drawing.Size(0, 477);
-            this.txtStat.TabIndex = 13;
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(983, 504);
-            this.Controls.Add(this.txtStat);
+            this.ClientSize = new System.Drawing.Size(959, 504);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.lblFillWarning);
             this.Controls.Add(this.btnResult);
             this.Controls.Add(this.reportTable);
             this.Controls.Add(this.grpBox);
-            this.Location = new System.Drawing.Point(100, 300);
+            this.Location = new System.Drawing.Point(80, 300);
             this.Name = "MainWindow";
             this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
@@ -313,7 +308,6 @@ namespace TwoCustomerThread
             this.grpBox.ResumeLayout(false);
             this.grpBox.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -339,7 +333,6 @@ namespace TwoCustomerThread
         private System.Windows.Forms.DataGridViewTextBoxColumn ClmnDLockB;
         private System.Windows.Forms.DataGridViewTextBoxColumn ClmIsoType;
         private System.Windows.Forms.DataGridViewTextBoxColumn clmnQuery;
-        private System.Windows.Forms.TextBox txtStat;
     }
 }
 

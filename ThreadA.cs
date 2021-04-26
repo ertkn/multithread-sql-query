@@ -104,7 +104,7 @@ namespace TwoCustomerThread
                     using(SqlCommand sqlCommand = sqlConn.CreateCommand())
                     {
                         sqlConn.Open();
-                        SqlTransaction sqlTran = sqlConn.BeginTransaction(IsolationLevel.Serializable);
+                        SqlTransaction sqlTran = sqlConn.BeginTransaction(IsolationLevel.RepeatableRead);
 
                         isoLevel = (Convert.ToString(sqlTran.IsolationLevel));
 
@@ -126,10 +126,8 @@ namespace TwoCustomerThread
                                 sqlCommand.CommandText = "UPDATE Sales.SalesOrderDetail SET UnitPrice = UnitPrice * 10.0 / 10.0 WHERE UnitPrice > 100 AND EXISTS(SELECT * FROM Sales.SalesOrderHeader " +
                                     "WHERE Sales.SalesOrderHeader.SalesOrderID = Sales.SalesOrderDetail.SalesOrderID AND Sales.SalesOrderHeader.OrderDate BETWEEN '20110101' AND '20111231' " +
                                     "AND Sales.SalesOrderHeader.OnlineOrderFlag = 1)";
-                                //cmd += Convert.ToString(sqlCommand.ExecuteNonQuery()) + "//";
                                 //sqlCommand.CommandTimeout = 1200;
                                 sqlCommand.ExecuteNonQuery();
-                                //MessageBox.Show(count+". cycle--First query:"+a);
                             }
                             if (rand.NextDouble() < 0.5)
                             {
@@ -209,7 +207,7 @@ namespace TwoCustomerThread
             sttcDeadLock += cntDead;
             sttcQueryCount += _cntQuery;
             isFinished = true;
-            MainWindow.window.ThreadStatus("["+thread.Name + "A] finished in: " + endTime.Subtract(bgnTime) + " time. Query: " + _cntQuery + " Deadlock count: " +cntDead);
+            MainWindow.window.ThreadStatus("["+thread.Name + "A] finished in: " + endTime.Subtract(bgnTime) + " time. Query: " + _cntQuery + " Deadlock count: " +cntDead + " Timeout count: " + _cntTimeout);
         }
         public void ShowException(string exception)
         {
